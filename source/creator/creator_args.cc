@@ -856,6 +856,8 @@ static void print_help(bArgs *ba, bool all)
   PRINT("  $BLENDER_USER_CONFIG     Directory for user configuration files.\n");
   PRINT("  $BLENDER_USER_SCRIPTS    Directory for user scripts.\n");
   PRINT("  $BLENDER_USER_EXTENSIONS Directory for user extensions.\n");
+  PRINT("  $BLENDER_EXTRA_SCRIPTS   Search path for additional scripts.\n");
+  PRINT("  $BLENDER_EXTRA_ADDONS    Search path for additional addons.\n");
   PRINT("  $BLENDER_USER_DATAFILES  Directory for user data files (icons, translations, ..).\n");
   PRINT("\n");
   PRINT("  $BLENDER_SYSTEM_RESOURCES  Replace default directory of all bundled resource files.\n");
@@ -863,6 +865,8 @@ static void print_help(bArgs *ba, bool all)
   PRINT("  $BLENDER_SYSTEM_EXTENSIONS Directory for system extensions repository.\n");
   PRINT("  $BLENDER_SYSTEM_DATAFILES  Directory to replace bundled datafiles.\n");
   PRINT("  $BLENDER_SYSTEM_PYTHON     Directory to replace bundled Python libraries.\n");
+  PRINT("  $BLENDER_CUSTOM_SPLASH     Full path to an image that replaces the splash screen.\n");
+  PRINT("  $BLENDER_CUSTOM_BANNER     Full path to an image to overlay on the splash screen.\n");
 
   if (defs.with_ocio) {
     PRINT("  $OCIO                      Path to override the OpenColorIO configuration file.\n");

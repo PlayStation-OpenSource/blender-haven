@@ -151,7 +151,14 @@ static ImBuf *wm_block_splash_image(int width, int *r_height)
       ibuf = IMB_loadiffname(splash_filepath, IB_rect, nullptr);
     }
   }
-
+  
+  if (ibuf == nullptr) {
+    const char *custom_splash_path = getenv("BLENDER_CUSTOM_SPLASH");
+    if (custom_splash_path) {
+      ibuf = IMB_loadiffname(custom_splash_path, IB_rect, NULL);
+    }
+  }
+  
   if (ibuf == nullptr) {
     const uchar *splash_data = (const uchar *)datatoc_splash_png;
     size_t splash_data_size = datatoc_splash_png_size;
@@ -176,6 +183,37 @@ static ImBuf *wm_block_splash_image(int width, int *r_height)
   *r_height = height;
   return ibuf;
 }
+
+static ImBuf *wm_block_splash_banner_image(int width, int *r_height)
+{
+  ImBuf *ibuf = nullptr;
+  int height = 0;
+#ifndef WITH_HEADLESS
+
+  if (ibuf == nullptr) {
+    const char *custom_splash_path = getenv("BLENDER_CUSTOM_BANNER");
+    if (custom_splash_path) {
+      ibuf = IMB_loadiffname(custom_splash_path, IB_rect, NULL);
+    }
+  }
+
+  if (ibuf) {
+    ibuf->planes = 32; /* The image might not have an alpha channel. */
+    height = (width * ibuf->y) / ibuf->x;
+    if (width != ibuf->x || height != ibuf->y) {
+      IMB_scale(ibuf, width, height, IMBScaleFilter::Box, false);
+    }
+
+    IMB_premultiply_alpha(ibuf);
+  }
+
+#else
+  UNUSED_VARS(width);
+#endif
+  *r_height = height;
+  return ibuf;
+}
+
 
 /**
  * Close the splash when opening a file-selector.
@@ -254,6 +292,18 @@ static uiBlock *wm_block_splash_create(bContext *C, ARegion *region, void * /*ar
                               BKE_blender_version_string(),
                               splash_width - 8.0 * UI_SCALE_FAC,
                               splash_height - 13.0 * UI_SCALE_FAC);
+  }
+  
+  // You can pass a banner through the environment, so users recognize the
+  // blender version. The banner is an overlay of the splash so you can use transparency.
+  // If you prefer replacing the splash screen through the environment instead, see BLENDER_CUSTOM_SPLASH.
+  int banner_height = 0;
+  ImBuf *ibannerbuf = wm_block_splash_banner_image(splash_width, &banner_height);
+  if (ibannerbuf) {
+    uiBut *banner_but = uiDefButImage(
+        block, ibannerbuf, 0, 0.5f * U.widget_unit, splash_width, banner_height, nullptr);
+
+    UI_but_func_set(banner_but, wm_block_splash_close, block, nullptr);
   }
 
   const int layout_margin_x = UI_SCALE_FAC * 26;
