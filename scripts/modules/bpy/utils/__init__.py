@@ -325,7 +325,7 @@ def load_scripts(*, reload_scripts=False, refresh_scripts=False, extensions=True
     with RestrictBlend():
         env_script_paths = _os.getenv('BLENDER_EXTRA_SCRIPTS', [])
         if env_script_paths:
-            env_script_paths = list(filter(None, env_script_paths.split(';')))
+            env_script_paths = list(filter(None, env_script_paths.split(_os.pathsep)))
 
         all_script_paths = (
             *env_script_paths,
