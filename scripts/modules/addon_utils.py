@@ -67,12 +67,6 @@ def paths():
             paths.append(addon_dir)
         elif i == 0:
             print("Internal error:", addon_dir, "was not found!")
-            
-    extra_addon_paths = os.getenv('BLENDER_EXTRA_ADDONS', '')
-    if extra_addon_paths:
-        extra_addon_paths = list(filter(None, extra_addon_paths.split(os.pathsep)))
-        paths.extend(extra_addon_paths)
-            
     return paths
 
 

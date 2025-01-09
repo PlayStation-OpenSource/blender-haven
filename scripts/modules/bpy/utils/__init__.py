@@ -323,16 +323,7 @@ def load_scripts(*, reload_scripts=False, refresh_scripts=False, extensions=True
     from bpy_restrict_state import RestrictBlend
 
     with RestrictBlend():
-        env_script_paths = _os.getenv('BLENDER_EXTRA_SCRIPTS', [])
-        if env_script_paths:
-            env_script_paths = list(filter(None, env_script_paths.split(_os.pathsep)))
-
-        all_script_paths = (
-            *env_script_paths,
-            *script_paths(use_user=use_user)
-        )
-
-        for base_path in all_script_paths:
+        for base_path in script_paths(use_user=use_user):
             for path_subdir in _script_module_dirs:
                 path = _os.path.join(base_path, path_subdir)
                 if _os.path.isdir(path):

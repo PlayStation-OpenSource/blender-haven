@@ -856,8 +856,6 @@ static void print_help(bArgs *ba, bool all)
   PRINT("  $BLENDER_USER_CONFIG     Directory for user configuration files.\n");
   PRINT("  $BLENDER_USER_SCRIPTS    Directory for user scripts.\n");
   PRINT("  $BLENDER_USER_EXTENSIONS Directory for user extensions.\n");
-  PRINT("  $BLENDER_EXTRA_SCRIPTS   Search path for additional scripts.\n");
-  PRINT("  $BLENDER_EXTRA_ADDONS    Search path for additional addons.\n");
   PRINT("  $BLENDER_USER_DATAFILES  Directory for user data files (icons, translations, ..).\n");
   PRINT("\n");
   PRINT("  $BLENDER_SYSTEM_RESOURCES  Replace default directory of all bundled resource files.\n");
