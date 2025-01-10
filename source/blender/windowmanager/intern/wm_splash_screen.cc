@@ -153,7 +153,7 @@ static ImBuf *wm_block_splash_image(int width, int *r_height)
   }
   
   if (ibuf == nullptr) {
-    const char *custom_splash_path = getenv("BLENDER_CUSTOM_SPLASH");
+    const char *custom_splash_path = BLI_getenv("BLENDER_CUSTOM_SPLASH");
     if (custom_splash_path) {
       ibuf = IMB_loadiffname(custom_splash_path, IB_rect, NULL);
     }
@@ -191,7 +191,7 @@ static ImBuf *wm_block_splash_banner_image(int width, int *r_height)
 #ifndef WITH_HEADLESS
 
   if (ibuf == nullptr) {
-    const char *custom_splash_path = getenv("BLENDER_CUSTOM_BANNER");
+    const char *custom_splash_path = BLI_getenv("BLENDER_CUSTOM_BANNER");
     if (custom_splash_path) {
       ibuf = IMB_loadiffname(custom_splash_path, IB_rect, NULL);
     }
@@ -294,14 +294,14 @@ static uiBlock *wm_block_splash_create(bContext *C, ARegion *region, void * /*ar
                               splash_height - 13.0 * UI_SCALE_FAC);
   }
   
-  // You can pass a banner through the environment, so users recognize the
-  // blender version. The banner is an overlay of the splash so you can use transparency.
-  // If you prefer replacing the splash screen through the environment instead, see BLENDER_CUSTOM_SPLASH.
+  /* Banner image passed through the environment, to overlay on the splash and
+  * indicate a custom Blender version. Transparency can be used. To replace the
+  * full splash screen, see BLENDER_CUSTOM_SPLASH. */
   int banner_height = 0;
-  ImBuf *ibannerbuf = wm_block_splash_banner_image(splash_width, &banner_height);
-  if (ibannerbuf) {
+  ImBuf *bannerbuf = wm_block_splash_banner_image(splash_width, &banner_height);
+  if (bannerbuf) {
     uiBut *banner_but = uiDefButImage(
-        block, ibannerbuf, 0, 0.5f * U.widget_unit, splash_width, banner_height, nullptr);
+        block, bannerbuf, 0, 0.5f * U.widget_unit, splash_width, banner_height, nullptr);
 
     UI_but_func_set(banner_but, wm_block_splash_close, block, nullptr);
   }

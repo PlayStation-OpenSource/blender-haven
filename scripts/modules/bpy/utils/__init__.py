@@ -419,7 +419,8 @@ def script_paths_pref():
 def script_paths_system_environment():
     """Returns a list of system script directories from environment variables."""
     if env_system_path := _os.environ.get("BLENDER_SYSTEM_SCRIPTS"):
-        return [_os.path.normpath(env_system_path)]
+        env_system_path = list(filter(None, env_system_path.split(_os.pathsep)))
+        return [_os.path.normpath(p) for p in env_system_path]
     return []
 
 
@@ -469,10 +470,7 @@ def script_paths(*, subdir=None, user_pref=True, check_all=False, use_user=True,
         base_paths.extend(script_paths_pref())
 
     if use_system_environment:
-        system_script_paths = _os.environ.get("BLENDER_SYSTEM_SCRIPTS", [])
-        if system_script_paths:
-            system_script_paths = list(filter(None, system_script_paths.split(_os.pathsep)))
-            base_paths.extend(system_script_paths)
+        base_paths.extend(script_paths_system_environment())
 
     scripts = []
     for path in base_paths:
@@ -534,13 +532,11 @@ def app_template_paths(*, path=None):
         yield path_test
 
     # Uses BLENDER_SYSTTEM_SCRIPTS
-    system_script_paths = _os.environ.get("BLENDER_SYSTEM_SCRIPTS", "")
-    if system_script_paths:
-        system_script_paths = list(filter(None, system_script_paths.split(_os.pathsep)))
-        for path in system_script_paths:
-            path_test = _os.path.join(path, "startup", "bl_app_templates_system", *subdir_args)
-            if _os.path.isdir(path_test):
-                yield path_test
+    system_script_paths = script_paths_system_environment()
+    for path in system_script_paths:
+        path_test = _os.path.join(path, "startup", "bl_app_templates_system", *subdir_args)
+        if _os.path.isdir(path_test):
+            yield path_test
 
     # Uses default local or system location.
     path_test = system_resource('SCRIPTS', path=_os.path.join("startup", "bl_app_templates_system", *subdir_args))
