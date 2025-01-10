@@ -184,7 +184,10 @@ static ImBuf *wm_block_splash_image(int width, int *r_height)
   return ibuf;
 }
 
-static ImBuf *wm_block_splash_banner_image(int *r_width, int *r_height, int max_width, int max_height)
+static ImBuf *wm_block_splash_banner_image(int *r_width,
+                                           int *r_height,
+                                           int max_width,
+                                           int max_height)
 {
   ImBuf *ibuf = nullptr;
   int height = 0;
@@ -197,31 +200,27 @@ static ImBuf *wm_block_splash_banner_image(int *r_width, int *r_height, int max_
       ibuf = IMB_loadiffname(custom_splash_path, IB_rect, NULL);
     }
   }
-  
+
   if (ibuf) {
     ibuf->planes = 32; /* The image might not have an alpha channel. */
 
     width = ibuf->x;
     height = ibuf->y;
-    if (width > max_width || height > max_height)
-    {
+    if (width > 0 && height > 0 && (width > max_width || height > max_height)) {
       float splash_ratio = max_width / (float)max_height;
       float banner_ratio = ibuf->x / (float)ibuf->y;
 
-      if (banner_ratio > splash_ratio)
-      {
+      if (banner_ratio > splash_ratio) {
         // banner is wider than splash
         width = max_width;
         height = max_width / banner_ratio;
       }
-      else if (banner_ratio < splash_ratio)
-      {
+      else if (banner_ratio < splash_ratio) {
         // banner is taller than splash
         height = max_height;
-        width = max_height * banner_ratio;;
+        width = max_height * banner_ratio;
       }
-      else
-      {
+      else {
         width = max_width;
         height = max_height;
       }
@@ -229,7 +228,7 @@ static ImBuf *wm_block_splash_banner_image(int *r_width, int *r_height, int max_
         IMB_scale(ibuf, width, height, IMBScaleFilter::Box, false);
       }
     }
-    
+
     IMB_premultiply_alpha(ibuf);
   }
 
@@ -325,7 +324,8 @@ static uiBlock *wm_block_splash_create(bContext *C, ARegion *region, void * /*ar
    * full splash screen, see BLENDER_CUSTOM_SPLASH. */
   int banner_width = 0;
   int banner_height = 0;
-  ImBuf *bannerbuf = wm_block_splash_banner_image(&banner_width, &banner_height, splash_width, splash_height);
+  ImBuf *bannerbuf = wm_block_splash_banner_image(
+      &banner_width, &banner_height, splash_width, splash_height);
   if (bannerbuf) {
     uiBut *banner_but = uiDefButImage(
         block, bannerbuf, 0, 0.5f * U.widget_unit, banner_width, banner_height, nullptr);

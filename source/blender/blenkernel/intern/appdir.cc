@@ -454,7 +454,6 @@ static blender::Vector<std::string> get_path_environment_multiple(const char *su
   const char separator = ':';
 #endif
 
-
   size_t last = 0;
   size_t next = 0;
   for (; (next = env_path_str.find(separator, last)) != std::string::npos; last = next + 1) {
@@ -464,8 +463,7 @@ static blender::Vector<std::string> get_path_environment_multiple(const char *su
       paths.append(path);
     }
   }
-  if (last < env_path_str.size())
-  {
+  if (last < env_path_str.size()) {
     std::string path = env_path_str.substr(last, env_path_str.size() - last);
     path = (path + SEP_STR) + subfolder_name;
     paths.append(path);
