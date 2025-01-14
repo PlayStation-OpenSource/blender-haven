@@ -194,7 +194,7 @@ static ImBuf *wm_block_splash_banner_image(int *r_width,
   int width = max_width;
 #ifndef WITH_HEADLESS
 
-  const char *custom_splash_path = BLI_getenv("BLENDER_CUSTOM_BANNER");
+  const char *custom_splash_path = BLI_getenv("BLENDER_CUSTOM_SPLASH_BANNER");
   if (custom_splash_path) {
     ibuf = IMB_loadiffname(custom_splash_path, IB_rect, NULL);
   }
