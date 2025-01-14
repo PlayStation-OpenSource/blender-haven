@@ -418,9 +418,8 @@ def script_paths_pref():
 
 def script_paths_system_environment():
     """Returns a list of system script directories from environment variables."""
-    if env_system_path := _os.environ.get("BLENDER_SYSTEM_SCRIPTS"):
-        env_system_path = list(filter(None, env_system_path.split(_os.pathsep)))
-        return [_os.path.normpath(p) for p in env_system_path]
+    if env_system_paths := _os.environ.get("BLENDER_SYSTEM_SCRIPTS"):
+        return [_os.path.normpath(p) for p in env_system_paths.split(_os.pathsep) if p]
     return []
 
 
@@ -532,8 +531,7 @@ def app_template_paths(*, path=None):
         yield path_test
 
     # Uses BLENDER_SYSTTEM_SCRIPTS
-    system_script_paths = script_paths_system_environment()
-    for path in system_script_paths:
+    for path in script_paths_system_environment():
         path_test = _os.path.join(path, "startup", "bl_app_templates_system", *subdir_args)
         if _os.path.isdir(path_test):
             yield path_test

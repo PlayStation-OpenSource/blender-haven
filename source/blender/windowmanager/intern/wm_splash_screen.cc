@@ -212,12 +212,12 @@ static ImBuf *wm_block_splash_banner_image(int *r_width,
     float banner_ratio = ibuf->x / (float)ibuf->y;
 
     if (banner_ratio > splash_ratio) {
-      // banner is wider than splash
+      /* banner is wider than splash */
       width = max_width;
       height = max_width / banner_ratio;
     }
     else if (banner_ratio < splash_ratio) {
-      // banner is taller than splash
+      /* banner is taller than splash */
       height = max_height;
       width = max_height * banner_ratio;
     }

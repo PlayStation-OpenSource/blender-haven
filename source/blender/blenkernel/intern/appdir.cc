@@ -453,20 +453,27 @@ static blender::Vector<std::string> get_path_environment_multiple(const char *su
 #else
   const char separator = ':';
 #endif
+  char path[PATH_MAX] = "\0";
 
   size_t last = 0;
   size_t next = 0;
   for (; (next = env_path_str.find(separator, last)) != std::string::npos; last = next + 1) {
-    std::string path = env_path_str.substr(last, next - last);
-    path = (path + SEP_STR) + subfolder_name;
-    if (!check_is_dir || BLI_is_dir(path.c_str())) {
+    BLI_path_join(
+        path, sizeof(path), env_path_str.substr(last, next - last).c_str(), subfolder_name);
+    BLI_path_make_safe(path);
+    if (!check_is_dir || BLI_is_dir(path)) {
       paths.append(path);
     }
   }
   if (last < env_path_str.size()) {
-    std::string path = env_path_str.substr(last, env_path_str.size() - last);
-    path = (path + SEP_STR) + subfolder_name;
-    paths.append(path);
+    BLI_path_join(path,
+                  sizeof(path),
+                  env_path_str.substr(last, env_path_str.size() - last).c_str(),
+                  subfolder_name);
+    BLI_path_make_safe(path);
+    if (!check_is_dir || BLI_is_dir(path)) {
+      paths.append(path);
+    }
   }
 
   return paths;
